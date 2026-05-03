@@ -186,4 +186,78 @@ export class AdminAdvancedService {
       },
     });
   }
+  async createAdminUser(data: any) {
+    if (!data.username || !data.password || !data.fullName || !data.role) {
+      throw new BadRequestException('username, password, fullName and role are required');
+    }
+
+    return this.prisma.adminUser.create({
+      data: {
+        username: data.username,
+        password: data.password,
+        fullName: data.fullName,
+        role: data.role,
+        unit: data.unit ?? '',
+        email: data.email ?? '',
+        phone: data.phone ?? '',
+        passportNo: data.passportNo ?? '',
+        studentNo: data.studentNo ?? '',
+        isLocked: data.isLocked ?? false,
+      },
+    });
+  }
+
+  async searchAdminUsers(query = '') {
+    const q = query.trim();
+
+    return this.prisma.adminUser.findMany({
+      where: q
+        ? {
+            OR: [
+              { username: { contains: q } },
+              { fullName: { contains: q } },
+              { role: { contains: q } },
+              { unit: { contains: q } },
+              { studentNo: { contains: q } },
+              { passportNo: { contains: q } },
+            ],
+          }
+        : {},
+      orderBy: { updatedAt: 'desc' },
+    });
+  }
+
+  async updateAdminUser(id: string, data: any) {
+    return this.prisma.adminUser.update({
+      where: { id },
+      data: {
+        fullName: data.fullName,
+        role: data.role,
+        unit: data.unit,
+        email: data.email,
+        phone: data.phone,
+        passportNo: data.passportNo,
+        studentNo: data.studentNo,
+        isLocked: data.isLocked,
+      },
+    });
+  }
+
+  async changeAdminUserPassword(id: string, password: string) {
+    if (!password) {
+      throw new BadRequestException('password is required');
+    }
+
+    return this.prisma.adminUser.update({
+      where: { id },
+      data: { password },
+    });
+  }
+
+  async lockAdminUser(id: string, isLocked: boolean) {
+    return this.prisma.adminUser.update({
+      where: { id },
+      data: { isLocked },
+    });
+  }
 }

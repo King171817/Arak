@@ -62,4 +62,42 @@ export class AdminAdvancedController {
   ) {
     return this.service.updateDailyReport(id, body);
   }
+  @Post('users')
+  createAdminUser(@Body() body: Record<string, any>) {
+    return this.service.createAdminUser(body);
+  }
+
+  @Get('users')
+  searchAdminUsers() {
+    return this.service.searchAdminUsers('');
+  }
+
+  @Post('users/search')
+  searchAdminUsersPost(@Body() body: Record<string, any>) {
+    return this.service.searchAdminUsers(body.query ?? '');
+  }
+
+  @Put('users/:id')
+  updateAdminUser(
+    @Param('id') id: string,
+    @Body() body: Record<string, any>,
+  ) {
+    return this.service.updateAdminUser(id, body);
+  }
+
+  @Put('users/:id/password')
+  changeAdminUserPassword(
+    @Param('id') id: string,
+    @Body() body: Record<string, any>,
+  ) {
+    return this.service.changeAdminUserPassword(id, body.password);
+  }
+
+  @Put('users/:id/lock')
+  lockAdminUser(
+    @Param('id') id: string,
+    @Body() body: Record<string, any>,
+  ) {
+    return this.service.lockAdminUser(id, body.isLocked === true);
+  }
 }
