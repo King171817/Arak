@@ -9,6 +9,8 @@ import '../services/other_services_screen.dart';
 import '../education/education_expert_panel_screen.dart';
 import '../education/education_expert_management_screen.dart';
 import '../reports/daily_activity_report_screen.dart';
+import '../professor/messages/professor_unit_message_screen.dart';
+import '../professor/messages/professor_class_students_chat_screen.dart';
 import 'access_management/admin_access_management_screen.dart';
 import 'chat/admin_chat_management_screen.dart';
 import 'dataset/admin_dataset_settings_screen.dart';
@@ -157,6 +159,8 @@ class _AdminDashboardSafe extends StatelessWidget {
               _MiniAction(icon: Icons.storage_outlined, title: 'تنظیم دیتاست', onTap: () => _open(context, const AdminDatasetSettingsScreen())),
               _MiniAction(icon: Icons.assessment_outlined, title: t(lang, 'reports'), onTap: () => _open(context, const AdminReportsAuditScreen())),
               _MiniAction(icon: Icons.forum_outlined, title: t(lang, 'managers_chat'), onTap: () => _open(context, const AdminChatManagementScreen())),
+              _MiniAction(icon: Icons.mail_outline, title: 'پیام استاد به واحدها', onTap: () => _open(context, const ProfessorUnitMessageScreen())),
+              _MiniAction(icon: Icons.people_alt_outlined, title: 'گفتگوی استاد با دانشجویان کلاس', onTap: () => _open(context, const ProfessorClassStudentsChatScreen())),
               _MiniAction(
                 icon: Icons.apps_outlined,
                 title: t(lang, 'other_services'),
@@ -224,6 +228,8 @@ class _AdminControlSafe extends StatelessWidget {
               _MiniAction(icon: Icons.storage_outlined, title: 'تنظیم دیتاست', onTap: () => _open(context, const AdminDatasetSettingsScreen())),
               _MiniAction(icon: Icons.assessment_outlined, title: t(lang, 'reports'), onTap: () => _open(context, const AdminReportsAuditScreen())),
               _MiniAction(icon: Icons.forum_outlined, title: t(lang, 'managers_chat'), onTap: () => _open(context, const AdminChatManagementScreen())),
+              _MiniAction(icon: Icons.mail_outline, title: 'پیام استاد به واحدها', onTap: () => _open(context, const ProfessorUnitMessageScreen())),
+              _MiniAction(icon: Icons.people_alt_outlined, title: 'گفتگوی استاد با دانشجویان کلاس', onTap: () => _open(context, const ProfessorClassStudentsChatScreen())),
               _MiniAction(icon: Icons.logout, title: t(lang, 'logout'), onTap: appState.logout),
             ],
           ),
@@ -336,5 +342,6 @@ class _AdminTab {
     required this.page,
   });
 }
+
 
 
