@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/core.dart';
 import '../../core/theme/theme.dart';
 import '../../models/auth/app_lang.dart';
 import '../../state/app_state.dart';
+import '../../state/permissions/permission_state.dart';
 import '../../widgets/widgets.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -50,7 +51,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (!mounted) return;
 
-      widget.onLoggedIn?.call();
+      final permissionState = context.read<PermissionState>();
+
+await permissionState.loadForUser(
+  appState.currentUser?.id ?? userCtrl.text.trim(),
+);
+
+widget.onLoggedIn?.call();
     } catch (error) {
       if (!mounted) return;
 
@@ -274,6 +281,8 @@ class _LoginGlow extends StatelessWidget {
     );
   }
 }
+
+
 
 
 
