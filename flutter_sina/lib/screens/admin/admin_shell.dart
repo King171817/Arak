@@ -6,6 +6,9 @@ import '../../core/theme/app_colors.dart';
 import '../../state/app_state.dart';
 import '../../widgets/widgets.dart';
 import '../services/other_services_screen.dart';
+import '../education/education_expert_panel_screen.dart';
+import '../education/education_expert_management_screen.dart';
+import '../reports/daily_activity_report_screen.dart';
 import 'access_management/admin_access_management_screen.dart';
 import 'chat/admin_chat_management_screen.dart';
 import 'dataset/admin_dataset_settings_screen.dart';
@@ -145,6 +148,9 @@ class _AdminDashboardSafe extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               _MiniAction(icon: Icons.people_outline, title: t(lang, 'students'), onTap: () => _open(context, const AdminUsersScreen())),
+              _MiniAction(icon: Icons.badge_outlined, title: t(lang, 'education_expert_panel'), onTap: () => _open(context, const EducationExpertPanelScreen())),
+              _MiniAction(icon: Icons.manage_accounts_outlined, title: t(lang, 'expert_management'), onTap: () => _open(context, const EducationExpertManagementScreen())),
+              _MiniAction(icon: Icons.assignment_outlined, title: t(lang, 'daily_report'), onTap: () => _open(context, const DailyActivityReportScreen(isMainAdmin: true))),
               _MiniAction(icon: Icons.lock_outline, title: t(lang, 'settings'), onTap: () => _open(context, const AdminSectionLocksScreen())),
               _MiniAction(icon: Icons.campaign_outlined, title: t(lang, 'floating_announcement'), onTap: () => _open(context, const AdminGlobalSettingsScreen())),
               _MiniAction(icon: Icons.security_outlined, title: t(lang, 'admin_control_center'), onTap: () => _open(context, const AdminAccessManagementScreen())),
@@ -330,4 +336,5 @@ class _AdminTab {
     required this.page,
   });
 }
+
 

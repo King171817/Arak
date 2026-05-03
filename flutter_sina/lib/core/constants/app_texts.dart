@@ -37,7 +37,41 @@ String appText(AppLang lang, String key) {
       'EN': 'Language',
       'AR': 'اللغة',
     },
-    'dashboard': {
+            'exchange_money': {
+          'FA': 'چنج پول',
+          'EN': 'Exchange Money',
+          'AR': 'صرف العملات',
+        },
+        'flight_ticket': {
+          'FA': 'بلیط هواپیما',
+          'EN': 'Flight Ticket',
+          'AR': 'تذكرة طيران',
+        },
+        'training_courses': {
+          'FA': 'دوره‌های آموزشی',
+          'EN': 'Training Courses',
+          'AR': 'الدورات التدريبية',
+        },
+        'under_development': {
+          'FA': 'در حال تکمیل است',
+          'EN': 'is under development',
+          'AR': 'قيد التطوير',
+        },
+        'daily_report': {
+          'FA': 'گزارش روزانه',
+          'EN': 'Daily Report',
+          'AR': 'التقرير اليومي',
+        },
+        'education_expert_panel': {
+          'FA': 'پنل کارشناس آموزش',
+          'EN': 'Education Expert Panel',
+          'AR': 'لوحة خبير التعليم',
+        },
+        'expert_management': {
+          'FA': 'مدیریت کارشناسان',
+          'EN': 'Expert Management',
+          'AR': 'إدارة الخبراء',
+        },        'dashboard': {
       'FA': 'داشبورد',
       'EN': 'Dashboard',
       'AR': 'لوحة التحكم',
@@ -285,6 +319,8 @@ String appText(AppLang lang, String key) {
 String tr(AppLang lang, String key) {
   return appText(lang, key);
 }
+
+
 
 
 
