@@ -1,0 +1,16 @@
+.dart_tool/
+.vscode/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+pubspec.lock
+
+**/node_modules/
+**/dist/
+**/build/
+**/.env
+
+*.log
+*.rar
+*.zip

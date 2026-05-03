@@ -1,0 +1,91 @@
+﻿SUPER ADMIN CONTROL CENTER - DATASET MAP
+
+1) app_users
+- همه کاربران: دانشجو، استاد، مدیر، کارشناس، مدیر اصلی
+- قفل کاربر
+- تغییر نقش
+- تغییر واحد
+- ویرایش مشخصات
+- اتصال آواتار
+
+2) app_roles / app_permissions / app_user_permissions
+- تعریف نقش‌ها
+- تعریف دسترسی‌ها
+- دادن یا گرفتن دسترسی برای هر فرد
+
+3) app_units
+- واحدها: آموزش، بین‌الملل، خدمات دانشجویی، کنسولی، خدمات، پشتیبانی
+- قفل موقت واحد
+- پیام تعمیرات واحد
+
+4) education_classes / education_class_students / class_attendance
+- کلاس‌ها
+- استاد کلاس
+- دانشجویان کلاس
+- شروع کلاس
+- حضور دانشجو
+- گزارش کلاس‌های فعال و گذشته
+
+5) student_tickets / ticket_messages
+- درخواست‌ها
+- پاسخ به تیکت‌ها
+- شماره پیگیری
+- ارجاع به واحد/کارشناس
+
+6) app_messages
+- پیام خصوصی
+- پیام گروهی
+- پیام به واحد
+- پیام به نقش
+
+7) floating_messages
+- پیام شناور برای:
+  section
+  role
+  unit
+  user
+- چند کاربر یا چند نقش
+- زبان
+- زمان شروع و پایان
+- امکان بستن توسط کاربر
+
+8) partner_services / service_requests
+- خدمات آینده
+- شرکت یا سازمان همکار
+- API
+- فعال/غیرفعال
+- نیاز به تأیید دانشگاه
+- درخواست خدمت توسط کاربر
+
+9) ui_section_settings / app_assets_settings
+- آیکون هر بخش
+- سایز آیکون
+- فونت
+- لوگو
+- اسپلش
+- آرم هدر
+- بک‌گراند هدر
+- بک‌گراند کل برنامه
+
+10) smart_support_knowledge / smart_support_requests
+- دیتاست دستیار هوشمند
+- سؤال و پاسخ
+- ارجاع به واحد
+- ذخیره درخواست‌هایی که دستیار نتوانسته جواب دهد
+
+11) activity_logs
+- هر فعالیت مهم در برنامه:
+  login
+  logout
+  create
+  update
+  delete
+  lock
+  unlock
+  role_change
+  permission_change
+  ticket_reply
+  class_start
+  class_join
+  service_update
+  appearance_update

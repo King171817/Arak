@@ -1,0 +1,49 @@
+﻿import 'package:flutter/material.dart';
+
+class AdminUiSettingsScreen extends StatelessWidget {
+  const AdminUiSettingsScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('تنظیمات مدیریت ظاهر'),
+      ),
+      body: ListView(
+        children: [
+  IconButton(
+    icon: const Icon(Icons.settings),
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AdminUiSettingsScreen()),
+      );
+    },
+  ),
+          _UiSettingCard(setting: 'آیکون‌ها'),
+          _UiSettingCard(setting: 'فونت‌ها'),
+          _UiSettingCard(setting: 'سایز‌ها'),
+        ],
+      ),
+    );
+  }
+}
+
+class _UiSettingCard extends StatelessWidget {
+  final String setting;
+
+  const _UiSettingCard({required this.setting});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        title: Text(setting),
+        trailing: Icon(Icons.edit),
+        onTap: () {
+          // قابلیت ویرایش این بخش
+        },
+      ),
+    );
+  }
+}

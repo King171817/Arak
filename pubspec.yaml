@@ -1,0 +1,36 @@
+﻿name: zigurat_flutter_offline
+description: A new Flutter project.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  
+  fonts:
+    - family: Nazanin
+      fonts:
+        - asset: assets/fonts/Nazanin.ttf
+  
+  assets:
+    - assets/images/spring.gif
+    - assets/images/AirPort.png
+    - assets/images/Hotel.png
+    - assets/images/Learning.png
+    - assets/images/Mony.png
+    - assets/images/Taxi.png
+    - assets/images/Translator.png
+    - assets/images/Arak.gif

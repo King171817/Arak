@@ -1,0 +1,25 @@
+﻿Write-Host "Finding language-related symbols..." -ForegroundColor Cyan
+
+$legacy = "lib\legacy\legacy_main.dart"
+
+if (!(Test-Path $legacy)) {
+  Write-Host "ERROR: $legacy پیدا نشد." -ForegroundColor Red
+  exit
+}
+
+$patterns = @(
+  "^enum AppLang",
+  "^String langCode",
+  "^bool isRtlLang",
+  "^String _langKey",
+  "^String tr",
+  "^String appText"
+)
+
+foreach ($pattern in $patterns) {
+  Write-Host ""
+  Write-Host "Pattern: $pattern" -ForegroundColor Yellow
+  Select-String -Path $legacy -Pattern $pattern | ForEach-Object {
+    Write-Host "$($_.LineNumber): $($_.Line)"
+  }
+}

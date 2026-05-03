@@ -1,0 +1,111 @@
+﻿13: enum AppLang { fa, en, ar }
+15: String langCode(AppLang lang) {
+26: bool isRtlLang(AppLang lang) {
+41: String tr(AppLang lang, String key) {
+94: class EducationClassManagementScreen extends StatefulWidget {
+102: class _EducationClassManagementScreenState
+884: class EducationPrivateChatScreen extends StatefulWidget {
+892: class _EducationPrivateChatScreenState extends State<EducationPrivateChatScreen> {
+1180: class ProfessorLiveClassScreen extends StatefulWidget {
+1193: class _ProfessorLiveClassScreenState extends State<ProfessorLiveClassScreen> {
+1912: class AppState extends ChangeNotifier {
+2952: void main() {
+2965: class AnimatedAppBackground extends StatefulWidget {
+2974: class _AnimatedAppBackgroundState extends State<AnimatedAppBackground>
+3050: class _GlowCircle extends StatelessWidget {
+3070: class MyApp extends StatefulWidget {
+3077: class _MyAppState extends State<MyApp> {
+3276: class SplashScreen extends StatefulWidget {
+3285: class _SplashScreenState extends State<SplashScreen>
+3419: class LoginScreen extends StatefulWidget {
+3428: class _LoginScreenState extends State<LoginScreen> {
+4260: class UnitModel {
+4268: final List<UnitModel> units = <UnitModel>[
+4276: class StudentLiveClassScreen extends StatefulWidget {
+4290: class _StudentLiveClassScreenState extends State<StudentLiveClassScreen> {
+4742: class ManagedClassModel {
+4775: class ClassReportModel {
+4802: enum EducationPermission {
+4814: enum LiveClassStatus {
+4822: class EducationOfficerModel {
+4854: class EducationManagedClassModel {
+4922: class LiveClassParticipantModel {
+4958: class LiveClassMessageModel {
+4978: class EducationClassReportModel {
+5012: class EducationPrivateChatMessageModel {
+5058: class SuggestedQuestion {
+5073: class SupportService {
+5169: class SupportChatMessage {
+5180: class AdminSystemAuditLog {
+5196: class AppNotification {
+5210: final List<AppNotification> appNotifications = <AppNotification>[
+5249: class StudentInClassModel {
+5262: class UnitChatScreen extends StatelessWidget {
+5302: class StudentClassesPanel extends StatelessWidget {
+5430: class ClassModel {
+5446: class ProfessorModel {
+5455: final List<StudentInClassModel> mockStudents = <StudentInClassModel>[
+5462: final List<ClassModel> mockClasses = <ClassModel>[
+5486: final List<ProfessorModel> mockProfessors = <ProfessorModel>[
+5499: String appText(AppLang lang, String key) {
+5851: class AdminDashboardScreen extends StatefulWidget {
+5858: class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
+7217: class _AdminUserAccessItem {
+7269: class HomeScreen extends StatefulWidget {
+7277: class _HomeScreenState extends State<HomeScreen> {
+8200: class _ManagerChatCard extends StatelessWidget {
+8270: class _MeetingCard extends StatelessWidget {
+8345: class Meeting {
+8368: final List<Meeting> mockMeetings = <Meeting>[
+8398: class InterManagerMessage {
+8417: final List<InterManagerMessage> mockManagerMessages = <InterManagerMessage>[
+8437: class InterManagerChatScreen extends StatefulWidget {
+8451: class _InterManagerChatScreenState extends State<InterManagerChatScreen> {
+8666: class _OtherServiceCard extends StatelessWidget {
+8785: class OtherService {
+8797: final List<OtherService> studentOtherServices = <OtherService>[
+8808: final List<OtherService> staffOtherServices = <OtherService>[
+8814: final List<OtherService> otherServices = studentOtherServices;
+8817: class HeaderWithInteractiveSidePanel extends StatelessWidget {
+8997: class _HeaderActionIcon extends StatefulWidget {
+9014: class _HeaderActionIconState extends State<_HeaderActionIcon>
+9082: class _FloatingHeaderPanel extends StatelessWidget {
+9317: class _HeaderNotificationTile extends StatelessWidget {
+9370: class _HeaderCenterTexts extends StatelessWidget {
+9455: class MessageModel {
+9462: class ConversationMock {
+9482: class QuickTopicMock {
+9494: final List<ConversationMock> mockConversations = <ConversationMock>[
+9531: final List<QuickTopicMock> quickTopics = <QuickTopicMock>[
+9554: class UnitScreen extends StatefulWidget {
+9563: class _UnitScreenState extends State<UnitScreen>
+9887: class _ConversationSidebar extends StatelessWidget {
+10046: class _ChatCenterPanel extends StatelessWidget {
+10202: class _QuickAccessPanel extends StatelessWidget {
+10355: class SupportChatScreen extends StatefulWidget {
+10362: class _SupportChatScreenState extends State<SupportChatScreen>
+10588: class _TypingIndicator extends StatelessWidget {
+10649: class OtherServiceScreen extends StatelessWidget {
+10788: class ProfileScreen extends StatefulWidget {
+10795: class _ProfileScreenState extends State<ProfileScreen> {
+11077: class ProfessorHomeScreen extends StatefulWidget {
+11089: class _ProfessorHomeScreenState extends State<ProfessorHomeScreen> {
+11464: class EducationOfficerChatScreen extends StatefulWidget {
+11472: class _EducationOfficerChatScreenState extends State<EducationOfficerChatScreen> {
+11545: class ManagerHomeScreen extends StatefulWidget {
+11554: class _ManagerHomeScreenState extends State<ManagerHomeScreen> {
+13392: class StudentEducationLookupScreen extends StatefulWidget {
+13401: class _StudentEducationLookupScreenState extends State<StudentEducationLookupScreen> {
+13511: class _StatCard extends StatelessWidget {
+13558: class _ManagerUnitCard extends StatelessWidget {
+13616: class ClassMessage {
+13639: class ClassFile {
+13658: class ClassReport {
+13681: class ProfessorClassScreen extends StatefulWidget {
+13690: class _ProfessorClassScreenState extends State<ProfessorClassScreen>
+14264: class _ClassMessageBubble extends StatelessWidget {
+14366: class _ChatTargetChip extends StatelessWidget {
+14390: class _InfoRow extends StatelessWidget {
+14417: class EducationMonitoringScreen extends StatefulWidget {
+14424: class _EducationMonitoringScreenState extends State<EducationMonitoringScreen> {
+14527: class ChatMessage {
