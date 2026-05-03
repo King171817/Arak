@@ -1,4 +1,4 @@
-﻿import {
+import {
   Injectable,
   UnauthorizedException,
   ConflictException,
@@ -85,24 +85,74 @@ export class AuthService {
       },
     });
 
-    if (!user) {
+    if (user) {
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordValid) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+
+      if (!user.isActive) {
+        throw new UnauthorizedException('Account is disabled');
+      }
+
+      const tokens = await this.generateTokens(user.id, user.email);
+
+      return {
+        user: this.mapUser(user),
+        ...tokens,
+      };
+    }
+
+    const adminUser = await this.prisma.adminUser.findFirst({
+      where: {
+        OR: [
+          { username: identifier },
+          { email: identifier },
+        ],
+      },
+    });
+
+    if (!adminUser) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isBcryptPassword =
+      adminUser.password.startsWith('$2a$') ||
+      adminUser.password.startsWith('$2b$') ||
+      adminUser.password.startsWith('$2y$');
+
+    const isPasswordValid = isBcryptPassword
+      ? await bcrypt.compare(password, adminUser.password)
+      : password === adminUser.password;
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    if (!user.isActive) {
+    if (adminUser.isLocked || !adminUser.isActive) {
       throw new UnauthorizedException('Account is disabled');
     }
 
-    const tokens = await this.generateTokens(user.id, user.email);
+    const tokenEmail = adminUser.email ?? `${adminUser.username}@local.test`;
+
+    const tokens = await this.generateTokens(adminUser.id, tokenEmail);
 
     return {
-      user: this.mapUser(user),
+      user: {
+        id: adminUser.id,
+        username: adminUser.username,
+        email: adminUser.email,
+        displayName: adminUser.fullName,
+        fullName: adminUser.fullName,
+        role: adminUser.role,
+        unitKey: adminUser.unit ?? 'education',
+        unit: adminUser.unit,
+        isLocked: adminUser.isLocked,
+        passportNo: adminUser.passportNo,
+        studentNo: adminUser.studentNo,
+        phone: adminUser.phone,
+      },
       ...tokens,
     };
   }
@@ -121,11 +171,22 @@ export class AuthService {
         where: { id: payload.sub },
       });
 
-      if (!user || !user.isActive) {
+      if (user && user.isActive) {
+        return this.generateTokens(user.id, user.email);
+      }
+
+      const adminUser = await this.prisma.adminUser.findUnique({
+        where: { id: payload.sub },
+      });
+
+      if (!adminUser || adminUser.isLocked || !adminUser.isActive) {
         throw new UnauthorizedException('Invalid refresh token');
       }
 
-      return this.generateTokens(user.id, user.email);
+      return this.generateTokens(
+        adminUser.id,
+        adminUser.email ?? `${adminUser.username}@local.test`,
+      );
     } catch {
       throw new UnauthorizedException('Invalid refresh token');
     }
