@@ -18,7 +18,7 @@ model User {
   role            String           @default("student")
   isActive         Boolean          @default(true)
   createdAt        DateTime         @default(now())
-  updatedAt   DateTime? @updatedAt
+  updatedAt        DateTime         @updatedAt
 
   requests         ServiceRequest[]
   uploadedFiles    UploadedFile[]
@@ -33,7 +33,7 @@ model ServiceRequest {
   priority      String   @default("normal")
   details       String?
   createdAt     DateTime @default(now())
-  updatedAt   DateTime? @updatedAt
+  updatedAt     DateTime @updatedAt
 
   user          User     @relation(fields: [userId], references: [id])
 }
@@ -60,34 +60,34 @@ model UploadedFile {
   userId       String
   requestId    String?
   createdAt    DateTime @default(now())
-  updatedAt   DateTime? @updatedAt
+  updatedAt    DateTime @updatedAt
 
   user         User     @relation(fields: [userId], references: [id])
 }
 
 model FloatingMessage {
-  id           String   @id @default(cuid())
-  textFa       String   @default("")
-  textEn       String   @default("")
-  textAr       String   @default("")
-  textTr       String   @default("")
-  textRu       String   @default("")
-  roles        String   @default("[]")
-  units        String   @default("[]")
-  userIds      String   @default("[]")
+  id           String    @id @default(cuid())
+  title        String?
+  message      String
+  titleFa      String?
+  messageFa    String?
+  titleEn      String?
+  messageEn    String?
+  titleAr      String?
+  messageAr    String?
+  titleTr      String?
+  messageTr    String?
+  titleRu      String?
+  messageRu    String?
   targetRole   String?
   targetUnit   String?
   targetUserId String?
-  startAt      DateTime?
-  endAt        DateTime?
-  isActive     Boolean  @default(true)
+  isActive     Boolean   @default(true)
+  startsAt     DateTime?
+  endsAt       DateTime?
   createdBy    String?
-  createdAt    DateTime @default(now())
-  updatedAt   DateTime? @updatedAt
-
-  @@index([targetRole])
-  @@index([targetUnit])
-  @@index([targetUserId])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
 model DatasetSetting {
@@ -99,7 +99,7 @@ model DatasetSetting {
   isActive    Boolean  @default(true)
   updatedBy   String?
   createdAt   DateTime @default(now())
-  updatedAt   DateTime? @updatedAt
+  updatedAt   DateTime @updatedAt
 }
 
 model AccessRule {
@@ -111,7 +111,7 @@ model AccessRule {
   isLocked    Boolean  @default(false)
   updatedBy   String?
   createdAt   DateTime @default(now())
-  updatedAt   DateTime? @updatedAt
+  updatedAt   DateTime @updatedAt
 
   @@index([userId])
   @@index([role])
@@ -121,7 +121,6 @@ model AccessRule {
 model DailyActivityReport {
   id          String   @id @default(cuid())
   userId      String
-  userName    String   @default("")
   role        String?
   unit        String?
   reportDate  DateTime @default(now())
@@ -131,7 +130,7 @@ model DailyActivityReport {
   isLocked    Boolean  @default(false)
   updatedBy   String?
   createdAt   DateTime @default(now())
-  updatedAt   DateTime? @updatedAt
+  updatedAt   DateTime @updatedAt
 
   @@index([userId])
   @@index([unit])
@@ -139,25 +138,23 @@ model DailyActivityReport {
 }
 
 model AdminUser {
-  id          String   @id @default(cuid())
-  username    String   @unique
-  email       String?  @unique
-  password    String
-  fullName    String
-  role        String   @default("student")
-  unit        String?
-  passportNo  String?
-  studentNo   String?
-  phone       String?
-  isLocked    Boolean  @default(false)
-  isActive    Boolean  @default(true)
-  createdBy   String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime? @updatedAt
+  id             String   @id @default(cuid())
+  username       String   @unique
+  email          String?  @unique
+  password       String
+  fullName       String
+  role           String   @default("student")
+  unit           String?
+  passportNumber String?
+  studentNumber  String?
+  phoneNumber    String?
+  isLocked       Boolean  @default(false)
+  isActive       Boolean  @default(true)
+  createdBy      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@index([username])
   @@index([role])
   @@index([unit])
-  @@index([studentNo])
-  @@index([passportNo])
 }
