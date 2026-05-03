@@ -8,38 +8,38 @@ datasource db {
 }
 
 model User {
-  id              String          @id @default(cuid())
-  email           String          @unique
+  id              String   @id @default(cuid())
+  email           String   @unique
   password        String
   fullName        String
   passportNumber  String?
   countryOfOrigin String?
   phoneNumber     String?
-  role            String          @default("student")
-  isActive        Boolean         @default(true)
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  role            String   @default("student")
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  requests        ServiceRequest[]
-  uploadedFiles   UploadedFile[]   // اضافه شد - رابطه معکوس
+  requests      ServiceRequest[]
+  uploadedFiles UploadedFile[] // Ã˜Â§Ã˜Â¶Ã˜Â§Ã™ÂÃ™â€¡ Ã˜Â´Ã˜Â¯ - Ã˜Â±Ã˜Â§Ã˜Â¨Ã˜Â·Ã™â€¡ Ã™â€¦Ã˜Â¹ÃšÂ©Ã™Ë†Ã˜Â³
 }
 
 model ServiceRequest {
-  id             String    @id @default(cuid())
-  requestNumber  String    @unique
-  userId         String
-  type           String
-  status         String    @default("pending")
-  priority       String    @default("normal")
-  details        String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  id            String   @id @default(cuid())
+  requestNumber String   @unique
+  userId        String
+  type          String
+  status        String   @default("pending")
+  priority      String   @default("normal")
+  details       String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  user           User      @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 model AuditLog {
-  id         String    @id @default(cuid())
+  id         String   @id @default(cuid())
   userId     String
   action     String
   entityType String?
@@ -47,7 +47,7 @@ model AuditLog {
   oldValues  String?
   newValues  String?
   ipAddress  String?
-  createdAt  DateTime  @default(now())
+  createdAt  DateTime @default(now())
 }
 
 model UploadedFile {
@@ -62,5 +62,23 @@ model UploadedFile {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  user         User     @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}
+
+model FloatingMessage {
+  id     String @id @default(uuid())
+  textFa String
+  textEn String
+  textAr String
+
+  startAt DateTime
+  endAt   DateTime
+
+  roles   String @default("[]")
+  units   String @default("[]")
+  userIds String @default("[]")
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
 }

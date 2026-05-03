@@ -4,9 +4,11 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { RequestModule } from './request/request.module';
 import { AdminModule } from './admin/admin.module';
+import { AdminAdvancedModule } from './admin-advanced/admin-advanced.module';
 
 @Module({
   imports: [
+    require('./admin-advanced/admin-advanced.module').AdminAdvancedModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -15,6 +17,7 @@ import { AdminModule } from './admin/admin.module';
     AuthModule,
     RequestModule,
     AdminModule,
+    AdminAdvancedModule,
   ],
 })
 export class AppModule {}
