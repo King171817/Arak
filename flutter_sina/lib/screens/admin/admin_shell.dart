@@ -245,7 +245,7 @@ class _AdminControlSafe extends StatelessWidget {
               if (permissionState.has('viewReports'))
                 _MiniAction(icon: Icons.assessment_outlined, title: t(lang, 'reports'), onTap: () => _open(context, const AdminReportsAuditScreen())),
               _MiniAction(icon: Icons.forum_outlined, title: t(lang, 'managers_chat'), onTap: () => _open(context, const AdminChatManagementScreen())),
-              _MiniAction(icon: Icons.logout, title: t(lang, 'logout'), onTap: appState.logout),
+              _MiniAction(icon: Icons.logout, title: t(lang, 'logout'), onTap: () { context.read<PermissionState>().clear(); appState.logout(); }),
             ],
           ),
         ),
@@ -357,3 +357,4 @@ class _AdminTab {
     required this.page,
   });
 }
+

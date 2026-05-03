@@ -66,16 +66,18 @@ widget.onLoggedIn?.call();
     } catch (error) {
       if (!mounted) return;
 
-      final String errorText = error.toString().contains('account_locked')
+      final bool locked = error.toString().contains('account_locked');
+
+      final String errorText = locked
           ? (appState.selectedLang == AppLang.fa
-              ? '???? ?? ??? ??? ???? ???? ???? ??? ??? ???'
+              ? '\u062d\u0633\u0627\u0628 \u0634\u0645\u0627 \u062a\u0648\u0633\u0637 \u0645\u062f\u06cc\u0631 \u0627\u0635\u0644\u06cc \u0642\u0641\u0644 \u0634\u062f\u0647 \u0627\u0633\u062a'
               : appState.selectedLang == AppLang.ar
-                  ? '?? ??? ????? ?? ???? ?? ??? ?????? ???????'
-                  : 'Your account or role has been locked by the super admin')
+                  ? '\u062a\u0645 \u0642\u0641\u0644 \u062d\u0633\u0627\u0628\u0643 \u0628\u0648\u0627\u0633\u0637\u0629 \u0627\u0644\u0645\u062f\u064a\u0631 \u0627\u0644\u0631\u0626\u064a\u0633\u064a'
+                  : 'Your account has been locked by the main admin')
           : (appState.selectedLang == AppLang.fa
-              ? '??? ?????? ?? ??? ???? ?????? ???'
+              ? '\u0646\u0627\u0645 \u06a9\u0627\u0631\u0628\u0631\u06cc \u06cc\u0627 \u0631\u0645\u0632 \u0639\u0628\u0648\u0631 \u0646\u0627\u062f\u0631\u0633\u062a \u0627\u0633\u062a'
               : appState.selectedLang == AppLang.ar
-                  ? '??? ???????? ?? ???? ?????? ??? ?????'
+                  ? '\u0627\u0633\u0645 \u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645 \u0623\u0648 \u0643\u0644\u0645\u0629 \u0627\u0644\u0645\u0631\u0648\u0631 \u063a\u064a\u0631 \u0635\u062d\u064a\u062d\u0629'
                   : 'Username or password is incorrect');
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -286,6 +288,7 @@ class _LoginGlow extends StatelessWidget {
     );
   }
 }
+
 
 
 

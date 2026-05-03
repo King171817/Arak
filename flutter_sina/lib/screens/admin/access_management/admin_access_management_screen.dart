@@ -33,6 +33,7 @@ class _AdminAccessManagementScreenState extends State<AdminAccessManagementScree
     _AdminUser(id: 'sina', name: 'sina', role: 'mainAdmin', unit: 'main', username: 'sina'),
     _AdminUser(id: 'admin1', name: 'مدیر آموزش', role: 'educationManager', unit: 'education', username: 'admin1'),
     _AdminUser(id: 'expert1', name: 'کارشناس آموزش ۱', role: 'educationExpert', unit: 'education', username: 'expert1'),
+    _AdminUser(id: 'edu_officer1', name: 'کارشناس آموزش اصلی', role: 'educationExpert', unit: 'education', username: 'edu_officer1'),
     _AdminUser(id: 'expert2', name: 'کارشناس آموزش ۲', role: 'educationExpert', unit: 'education', username: 'expert2'),
     _AdminUser(id: 'prof1', name: 'استاد ۱', role: 'professor', unit: 'education', username: 'prof1'),
     _AdminUser(id: 'student1', name: 'دانشجو ۱', role: 'student', unit: 'student', username: 'student1'),
@@ -412,3 +413,4 @@ class _AdminUser {
     required this.username,
   });
 }
+

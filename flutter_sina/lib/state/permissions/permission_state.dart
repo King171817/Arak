@@ -36,16 +36,24 @@ class PermissionState extends ChangeNotifier {
 
   bool get isLocked => currentRule?.isLocked == true;
 
-  String? get roleOverride => currentRule?.role;
+  String get roleKey => currentRule?.role ?? '';
+
+  String get unitKey => currentRule?.unit ?? '';
 
   bool has(String permission) {
     final rule = currentRule;
+
     if (rule == null) return true;
     if (rule.isLocked) return false;
+
+    if (rule.role == 'mainAdmin' || rule.role == 'superAdmin') return true;
+
     return rule.permissions.contains(permission);
   }
 
   bool hasAny(List<String> permissions) {
+    if (currentRule == null) return true;
+    if (isLocked) return false;
     return permissions.any(has);
   }
 
