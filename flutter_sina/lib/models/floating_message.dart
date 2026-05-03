@@ -3,28 +3,45 @@
 class FloatingMessage {
   final String id;
   final Map<AppLang, String> texts;
-  final DateTime start;
-  final DateTime end;
-  final List<String> roles;
-  final List<String> users;
-  final List<String> units;
+  final DateTime startAt;
+  final DateTime endAt;
+  final List<String> targetRoles;
+  final List<String> targetUnits;
+  final List<String> targetUserIds;
+  final bool allRoles;
+  final bool isActive;
 
-  FloatingMessage({
+  const FloatingMessage({
     required this.id,
     required this.texts,
-    required this.start,
-    required this.end,
-    required this.roles,
-    required this.users,
-    required this.units,
+    required this.startAt,
+    required this.endAt,
+    required this.targetRoles,
+    required this.targetUnits,
+    required this.targetUserIds,
+    this.allRoles = false,
+    this.isActive = true,
   });
 
-  bool isActive() {
+  bool get isInTimeWindow {
     final now = DateTime.now();
-    return now.isAfter(start) && now.isBefore(end);
+    return now.isAfter(startAt) && now.isBefore(endAt);
   }
 
-  String getText(AppLang lang) {
-    return texts[lang] ?? texts.values.first;
+  bool canShowFor({
+    required String userId,
+    required String role,
+    required String unit,
+  }) {
+    if (!isActive || !isInTimeWindow) return false;
+    if (allRoles) return true;
+    if (targetUserIds.contains(userId)) return true;
+    if (targetRoles.contains(role)) return true;
+    if (targetUnits.contains(unit)) return true;
+    return false;
+  }
+
+  String textFor(AppLang lang) {
+    return texts[lang] ?? texts[AppLang.fa] ?? texts.values.firstOrNull ?? '';
   }
 }

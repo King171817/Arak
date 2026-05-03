@@ -6,6 +6,7 @@ import '../core/helpers/language_helper.dart';
 import '../core/theme/app_theme.dart';
 import '../models/auth/app_lang.dart';
 import '../state/app_state.dart';
+import '../widgets/announcements/floating_announcement_banner.dart';
 
 class MyApp extends StatelessWidget {
   final Widget home;
@@ -51,7 +52,7 @@ class MyApp extends StatelessWidget {
           builder: (context, child) {
             return Directionality(
               textDirection: textDirectionOf(lang),
-              child: child ?? const SizedBox.shrink(),
+              child: FloatingAnnouncementBanner(child: child ?? const SizedBox.shrink()),
             );
           },
           home: home,
@@ -60,3 +61,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+

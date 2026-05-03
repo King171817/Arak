@@ -14,10 +14,10 @@ import '../professor/messages/professor_class_students_chat_screen.dart';
 import 'access_management/admin_access_management_screen.dart';
 import 'chat/admin_chat_management_screen.dart';
 import 'dataset/admin_dataset_settings_screen.dart';
+import 'floating_messages/admin_floating_messages_screen.dart';
 import 'reports/admin_reports_audit_screen.dart';
 import 'sections/admin_section_locks_screen.dart';
 import 'services_management/admin_services_management_screen.dart';
-import 'settings/admin_global_settings_screen.dart';
 import 'ui_settings/admin_ui_settings_screen.dart';
 import 'users/admin_users_screen.dart';
 
@@ -154,7 +154,7 @@ class _AdminDashboardSafe extends StatelessWidget {
               _MiniAction(icon: Icons.manage_accounts_outlined, title: t(lang, 'expert_management'), onTap: () => _open(context, const EducationExpertManagementScreen())),
               _MiniAction(icon: Icons.assignment_outlined, title: t(lang, 'daily_report'), onTap: () => _open(context, const DailyActivityReportScreen(isMainAdmin: true))),
               _MiniAction(icon: Icons.lock_outline, title: t(lang, 'settings'), onTap: () => _open(context, const AdminSectionLocksScreen())),
-              _MiniAction(icon: Icons.campaign_outlined, title: t(lang, 'floating_announcement'), onTap: () => _open(context, const AdminGlobalSettingsScreen())),
+              _MiniAction(icon: Icons.campaign_outlined, title: t(lang, 'floating_announcement'), onTap: () => _open(context, const AdminFloatingMessagesScreen())),
               _MiniAction(icon: Icons.security_outlined, title: t(lang, 'admin_control_center'), onTap: () => _open(context, const AdminAccessManagementScreen())),
               _MiniAction(icon: Icons.storage_outlined, title: 'تنظیم دیتاست', onTap: () => _open(context, const AdminDatasetSettingsScreen())),
               _MiniAction(icon: Icons.assessment_outlined, title: t(lang, 'reports'), onTap: () => _open(context, const AdminReportsAuditScreen())),
@@ -223,7 +223,7 @@ class _AdminControlSafe extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               _MiniAction(icon: Icons.lock_outline, title: t(lang, 'settings'), onTap: () => _open(context, const AdminSectionLocksScreen())),
-              _MiniAction(icon: Icons.campaign_outlined, title: t(lang, 'floating_announcement'), onTap: () => _open(context, const AdminGlobalSettingsScreen())),
+              _MiniAction(icon: Icons.campaign_outlined, title: t(lang, 'floating_announcement'), onTap: () => _open(context, const AdminFloatingMessagesScreen())),
               _MiniAction(icon: Icons.security_outlined, title: t(lang, 'admin_control_center'), onTap: () => _open(context, const AdminAccessManagementScreen())),
               _MiniAction(icon: Icons.storage_outlined, title: 'تنظیم دیتاست', onTap: () => _open(context, const AdminDatasetSettingsScreen())),
               _MiniAction(icon: Icons.assessment_outlined, title: t(lang, 'reports'), onTap: () => _open(context, const AdminReportsAuditScreen())),
@@ -342,6 +342,8 @@ class _AdminTab {
     required this.page,
   });
 }
+
+
 
 
 
