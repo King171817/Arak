@@ -1,8 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/auth/app_lang.dart';
-import '../../models/floating_message.dart';
+import '../../repositories/admin_advanced_repository.dart';
 import '../../state/app_state.dart';
 
 class FloatingAnnouncementBanner extends StatefulWidget {
@@ -19,30 +18,47 @@ class FloatingAnnouncementBanner extends StatefulWidget {
 
 class _FloatingAnnouncementBannerState extends State<FloatingAnnouncementBanner> {
   final dismissedInSession = <String>{};
+  final repository = AdminAdvancedRepository();
 
-  final demoMessages = <FloatingMessage>[
-    FloatingMessage(
-      id: 'demo-global-1',
-      texts: {
-        AppLang.fa: 'اطلاعیه مهم: لطفاً اطلاعات پروفایل خود را بررسی کنید.',
-        AppLang.en: 'Important notice: Please review your profile information.',
-        AppLang.ar: 'إشعار مهم: يرجى مراجعة معلومات ملفك الشخصي.',
-      },
-      startAt: DateTime(2020),
-      endAt: DateTime(2035),
-      targetRoles: const [],
-      targetUnits: const [],
-      targetUserIds: const [],
-      allRoles: true,
-    ),
-  ];
+  bool loading = true;
+  String? error;
+  List<dynamic> messages = <dynamic>[];
+
+  @override
+  void initState() {
+    super.initState();
+    loadMessages();
+  }
+
+  Future<void> loadMessages() async {
+    try {
+      final result = await repository.fetchFloatingMessages();
+      if (!mounted) return;
+      setState(() {
+        messages = result;
+        loading = false;
+        error = null;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        messages = <dynamic>[];
+        loading = false;
+        error = e.toString();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
     final lang = appState.selectedLang;
 
-    final visible = demoMessages.where((m) {
+    if (loading || error != null || messages.isEmpty) {
+      return widget.child;
+    }
+
+    final visible = messages.where((m) {
       return !dismissedInSession.contains(m.id) &&
           m.canShowFor(
             userId: appState.currentUser?.id ?? 'guest',
@@ -93,4 +109,3 @@ class _FloatingAnnouncementBannerState extends State<FloatingAnnouncementBanner>
     );
   }
 }
-

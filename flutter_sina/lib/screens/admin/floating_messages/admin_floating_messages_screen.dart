@@ -5,6 +5,7 @@ import '../../../core/core.dart';
 import '../../../models/auth/app_lang.dart';
 import '../../../models/floating_message.dart';
 import '../../../state/app_state.dart';
+import '../../../repositories/admin_advanced_repository.dart';
 
 class AdminFloatingMessagesScreen extends StatefulWidget {
   const AdminFloatingMessagesScreen({super.key});
@@ -26,6 +27,7 @@ class _AdminFloatingMessagesScreenState extends State<AdminFloatingMessagesScree
   final selectedUnits = <String>{};
 
   final messages = <FloatingMessage>[];
+  final repository = AdminAdvancedRepository();
 
   @override
   void dispose() {
@@ -36,7 +38,7 @@ class _AdminFloatingMessagesScreenState extends State<AdminFloatingMessagesScree
     super.dispose();
   }
 
-  void addMessage() {
+  Future<void> addMessage() async {
     if (faController.text.trim().isEmpty &&
         enController.text.trim().isEmpty &&
         arController.text.trim().isEmpty) {
@@ -253,3 +255,4 @@ class _AdminFloatingMessagesScreenState extends State<AdminFloatingMessagesScree
     );
   }
 }
+

@@ -21,7 +21,7 @@ model User {
   updatedAt       DateTime @updatedAt
 
   requests      ServiceRequest[]
-  uploadedFiles UploadedFile[] // Ã˜Â§Ã˜Â¶Ã˜Â§Ã™ÂÃ™â€¡ Ã˜Â´Ã˜Â¯ - Ã˜Â±Ã˜Â§Ã˜Â¨Ã˜Â·Ã™â€¡ Ã™â€¦Ã˜Â¹ÃšÂ©Ã™Ë†Ã˜Â³
+  uploadedFiles UploadedFile[] // ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¶ÃƒËœÃ‚Â§Ãƒâ„¢Ã‚ÂÃƒâ„¢Ã¢â‚¬Â¡ ÃƒËœÃ‚Â´ÃƒËœÃ‚Â¯ - ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â·Ãƒâ„¢Ã¢â‚¬Â¡ Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â¹ÃƒÅ¡Ã‚Â©Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â³
 }
 
 model ServiceRequest {
@@ -81,4 +81,39 @@ model FloatingMessage {
   isActive Boolean @default(true)
 
   createdAt DateTime @default(now())
+}
+
+model DatasetSetting {
+  id          String   @id @default(uuid())
+  apiBaseUrl  String   @default("")
+  databaseUrl String   @default("")
+  useApi      Boolean  @default(true)
+  useMock     Boolean  @default(true)
+  updatedBy   String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AccessRule {
+  id          String   @id @default(uuid())
+  userId      String
+  role        String
+  unit        String   @default("")
+  permissions String   @default("[]")
+  isLocked    Boolean  @default(false)
+  updatedBy   String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model DailyActivityReport {
+  id          String   @id @default(uuid())
+  userId      String
+  userName    String
+  role        String
+  unit        String
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
