@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'app/my_app.dart';
 import 'models/auth/app_role.dart';
 import 'state/app_state.dart';
+import 'state/permissions/permission_state.dart';
 import 'state/admin_control_state.dart';
 import 'state/live_class_state.dart';
 import 'screens/splash/app_splash_screen.dart';
@@ -21,6 +22,7 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => PermissionState()),
         ChangeNotifierProvider(create: (_) => AppState()),
         ChangeNotifierProvider(create: (_) => AdminControlState()),
         ChangeNotifierProvider(create: (_) => LiveClassState()),
@@ -86,3 +88,4 @@ class _RootAppState extends State<RootApp> {
     );
   }
 }
+

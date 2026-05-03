@@ -6,12 +6,12 @@ import '../../core/theme/app_colors.dart';
 import '../../state/app_state.dart';
 import '../../state/permissions/permission_state.dart';
 import '../../widgets/widgets.dart';
-import '../education/education_expert_management_screen.dart';
-import '../education/education_expert_panel_screen.dart';
-import '../professor/messages/professor_class_students_chat_screen.dart';
-import '../professor/messages/professor_unit_message_screen.dart';
-import '../reports/daily_activity_report_screen.dart';
 import '../services/other_services_screen.dart';
+import '../education/education_expert_panel_screen.dart';
+import '../education/education_expert_management_screen.dart';
+import '../reports/daily_activity_report_screen.dart';
+import '../professor/messages/professor_unit_message_screen.dart';
+import '../professor/messages/professor_class_students_chat_screen.dart';
 import 'access_management/admin_access_management_screen.dart';
 import 'chat/admin_chat_management_screen.dart';
 import 'dataset/admin_dataset_settings_screen.dart';
@@ -41,9 +41,7 @@ class _AdminShellState extends State<AdminShell> {
     if (permissionState.isLocked) {
       return Scaffold(
         appBar: AppBar(title: const Text('حساب قفل شده')),
-        body: const Center(
-          child: Text('حساب شما توسط مدیر اصلی قفل شده است.'),
-        ),
+        body: const Center(child: Text('حساب شما توسط مدیر اصلی قفل شده است.')),
       );
     }
 
@@ -107,7 +105,9 @@ class _SafeAdminPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: Theme.of(context).scaffoldBackgroundColor,
-      child: SafeArea(child: child),
+      child: SafeArea(
+        child: child,
+      ),
     );
   }
 }
@@ -131,6 +131,13 @@ class _AdminDashboardSafe extends StatelessWidget {
     final appState = context.watch<AppState>();
     final permissionState = context.watch<PermissionState>();
     final lang = appState.selectedLang;
+
+    if (permissionState.isLocked) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('حساب قفل شده')),
+        body: const Center(child: Text('حساب شما توسط مدیر اصلی قفل شده است.')),
+      );
+    }
     final width = MediaQuery.of(context).size.width;
     final columns = width > 1000 ? 4 : width > 650 ? 3 : 2;
 
@@ -162,14 +169,11 @@ class _AdminDashboardSafe extends StatelessWidget {
               _MiniAction(icon: Icons.people_outline, title: t(lang, 'students'), onTap: () => _open(context, const AdminUsersScreen())),
               _MiniAction(icon: Icons.badge_outlined, title: t(lang, 'education_expert_panel'), onTap: () => _open(context, const EducationExpertPanelScreen())),
               _MiniAction(icon: Icons.manage_accounts_outlined, title: t(lang, 'expert_management'), onTap: () => _open(context, const EducationExpertManagementScreen())),
-              if (permissionState.has('viewReports'))
-                _MiniAction(icon: Icons.assignment_outlined, title: t(lang, 'daily_report'), onTap: () => _open(context, const DailyActivityReportScreen(isMainAdmin: true))),
+              if (context.watch<PermissionState>().has('viewReports')) _MiniAction(icon: Icons.assignment_outlined, title: t(lang, 'daily_report'), onTap: () => _open(context, const DailyActivityReportScreen(isMainAdmin: true))),
               _MiniAction(icon: Icons.lock_outline, title: t(lang, 'settings'), onTap: () => _open(context, const AdminSectionLocksScreen())),
               _MiniAction(icon: Icons.campaign_outlined, title: t(lang, 'floating_announcement'), onTap: () => _open(context, const AdminFloatingMessagesScreen())),
-              if (permissionState.has('changeRole'))
-                _MiniAction(icon: Icons.security_outlined, title: t(lang, 'admin_control_center'), onTap: () => _open(context, const AdminAccessManagementScreen())),
-              if (permissionState.has('datasetSettings'))
-                _MiniAction(icon: Icons.storage_outlined, title: 'تنظیم دیتاست', onTap: () => _open(context, const AdminDatasetSettingsScreen())),
+              if (context.watch<PermissionState>().has('changeRole')) _MiniAction(icon: Icons.security_outlined, title: t(lang, 'admin_control_center'), onTap: () => _open(context, const AdminAccessManagementScreen())),
+              if (context.watch<PermissionState>().has('datasetSettings')) _MiniAction(icon: Icons.storage_outlined, title: 'تنظیم دیتاست', onTap: () => _open(context, const AdminDatasetSettingsScreen())),
               _MiniAction(icon: Icons.assessment_outlined, title: t(lang, 'reports'), onTap: () => _open(context, const AdminReportsAuditScreen())),
               _MiniAction(icon: Icons.forum_outlined, title: t(lang, 'managers_chat'), onTap: () => _open(context, const AdminChatManagementScreen())),
               _MiniAction(icon: Icons.mail_outline, title: 'پیام استاد به واحدها', onTap: () => _open(context, const ProfessorUnitMessageScreen())),
@@ -207,6 +211,13 @@ class _AdminControlSafe extends StatelessWidget {
     final permissionState = context.watch<PermissionState>();
     final lang = appState.selectedLang;
 
+    if (permissionState.isLocked) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('حساب قفل شده')),
+        body: const Center(child: Text('حساب شما توسط مدیر اصلی قفل شده است.')),
+      );
+    }
+
     return Material(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
@@ -238,13 +249,12 @@ class _AdminControlSafe extends StatelessWidget {
               const SizedBox(height: 8),
               _MiniAction(icon: Icons.lock_outline, title: t(lang, 'settings'), onTap: () => _open(context, const AdminSectionLocksScreen())),
               _MiniAction(icon: Icons.campaign_outlined, title: t(lang, 'floating_announcement'), onTap: () => _open(context, const AdminFloatingMessagesScreen())),
-              if (permissionState.has('changeRole'))
-                _MiniAction(icon: Icons.security_outlined, title: t(lang, 'admin_control_center'), onTap: () => _open(context, const AdminAccessManagementScreen())),
-              if (permissionState.has('datasetSettings'))
-                _MiniAction(icon: Icons.storage_outlined, title: 'تنظیم دیتاست', onTap: () => _open(context, const AdminDatasetSettingsScreen())),
-              if (permissionState.has('viewReports'))
-                _MiniAction(icon: Icons.assessment_outlined, title: t(lang, 'reports'), onTap: () => _open(context, const AdminReportsAuditScreen())),
+              if (context.watch<PermissionState>().has('changeRole')) _MiniAction(icon: Icons.security_outlined, title: t(lang, 'admin_control_center'), onTap: () => _open(context, const AdminAccessManagementScreen())),
+              if (context.watch<PermissionState>().has('datasetSettings')) _MiniAction(icon: Icons.storage_outlined, title: 'تنظیم دیتاست', onTap: () => _open(context, const AdminDatasetSettingsScreen())),
+              _MiniAction(icon: Icons.assessment_outlined, title: t(lang, 'reports'), onTap: () => _open(context, const AdminReportsAuditScreen())),
               _MiniAction(icon: Icons.forum_outlined, title: t(lang, 'managers_chat'), onTap: () => _open(context, const AdminChatManagementScreen())),
+              _MiniAction(icon: Icons.mail_outline, title: 'پیام استاد به واحدها', onTap: () => _open(context, const ProfessorUnitMessageScreen())),
+              _MiniAction(icon: Icons.people_alt_outlined, title: 'گفتگوی استاد با دانشجویان کلاس', onTap: () => _open(context, const ProfessorClassStudentsChatScreen())),
               _MiniAction(icon: Icons.logout, title: t(lang, 'logout'), onTap: appState.logout),
             ],
           ),
@@ -357,3 +367,11 @@ class _AdminTab {
     required this.page,
   });
 }
+
+
+
+
+
+
+
+

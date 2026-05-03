@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import '../models/admin/access_rule_model.dart';
 import '../models/admin/backend_daily_report_model.dart';
 import '../models/admin/backend_floating_message_model.dart';
+import '../models/admin/dataset_setting_model.dart';
 
 class AdminAdvancedRepository {
   static const String baseUrl = 'http://localhost:3001';
@@ -151,5 +152,69 @@ class AdminAdvancedRepository {
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw Exception('Failed to update daily report: ${response.statusCode}');
     }
+  }
+  Future<DatasetSettingModel> fetchDatasetSetting() async {
+    final response = await http.get(Uri.parse('$baseUrl/admin-advanced/dataset-setting'));
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw Exception('Failed to load dataset setting: ${response.statusCode}');
+    }
+
+    final decoded = jsonDecode(response.body);
+    if (decoded is Map<String, dynamic>) {
+      return DatasetSettingModel.fromJson(decoded);
+    }
+
+    return const DatasetSettingModel(
+      apiBaseUrl: 'http://localhost:3001',
+      databaseUrl: '',
+      useApi: true,
+      useMock: true,
+      updatedBy: '',
+    );
+  }
+
+  Future<void> saveDatasetSetting({
+    required String apiBaseUrl,
+    required String databaseUrl,
+    required bool useApi,
+    required bool useMock,
+    required String updatedBy,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/admin-advanced/dataset-setting'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'apiBaseUrl': apiBaseUrl,
+        'databaseUrl': databaseUrl,
+        'useApi': useApi,
+        'useMock': useMock,
+        'updatedBy': updatedBy,
+      }),
+    );
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw Exception('Failed to save dataset setting: ${response.statusCode}');
+    }
+  }
+  Future<AccessRuleModel?> fetchAccessRuleByUser(String userId) async {
+    final response = await http.get(Uri.parse('$baseUrl/admin-advanced/access-rule/$userId'));
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw Exception('Failed to load user access rule: ${response.statusCode}');
+    }
+
+    final decoded = jsonDecode(response.body);
+
+    if (decoded == null) {
+      return null;
+    }
+
+    if (decoded is Map<String, dynamic>) {
+      if (decoded.isEmpty) return null;
+      return AccessRuleModel.fromJson(decoded);
+    }
+
+    return null;
   }
 }
