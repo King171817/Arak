@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 import '../models/admin/access_rule_model.dart';
 import '../models/admin/backend_daily_report_model.dart';
+import '../models/admin/backend_admin_user_model.dart';
 import '../models/admin/backend_floating_message_model.dart';
 import '../models/admin/dataset_setting_model.dart';
 
@@ -216,5 +217,118 @@ class AdminAdvancedRepository {
     }
 
     return null;
+  }
+  Future<List<BackendAdminUserModel>> searchAdminUsers(String query) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/admin-advanced/users/search'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'query': query}),
+    );
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw Exception('Failed to search users: ${response.statusCode}');
+    }
+
+    final decoded = jsonDecode(response.body);
+    if (decoded is List) {
+      return decoded.whereType<Map<String, dynamic>>().map(BackendAdminUserModel.fromJson).toList();
+    }
+
+    return <BackendAdminUserModel>[];
+  }
+
+  Future<void> createAdminUser({
+    required String username,
+    required String password,
+    required String fullName,
+    required String role,
+    required String unit,
+    required String email,
+    required String phone,
+    required String passportNo,
+    required String studentNo,
+    required bool isLocked,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/admin-advanced/users'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'username': username,
+        'password': password,
+        'fullName': fullName,
+        'role': role,
+        'unit': unit,
+        'email': email,
+        'phone': phone,
+        'passportNo': passportNo,
+        'studentNo': studentNo,
+        'isLocked': isLocked,
+      }),
+    );
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw Exception('Failed to create user: ${response.statusCode}');
+    }
+  }
+
+  Future<void> updateAdminUser({
+    required String id,
+    required String fullName,
+    required String role,
+    required String unit,
+    required String email,
+    required String phone,
+    required String passportNo,
+    required String studentNo,
+    required bool isLocked,
+  }) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/admin-advanced/users/$id'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'fullName': fullName,
+        'role': role,
+        'unit': unit,
+        'email': email,
+        'phone': phone,
+        'passportNo': passportNo,
+        'studentNo': studentNo,
+        'isLocked': isLocked,
+      }),
+    );
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw Exception('Failed to update user: ${response.statusCode}');
+    }
+  }
+
+  Future<void> changeAdminUserPassword({
+    required String id,
+    required String password,
+  }) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/admin-advanced/users/$id/password'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'password': password}),
+    );
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw Exception('Failed to change password: ${response.statusCode}');
+    }
+  }
+
+  Future<void> lockAdminUser({
+    required String id,
+    required bool isLocked,
+  }) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/admin-advanced/users/$id/lock'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'isLocked': isLocked}),
+    );
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw Exception('Failed to lock user: ${response.statusCode}');
+    }
   }
 }
