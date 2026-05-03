@@ -8,7 +8,7 @@ import 'state/permissions/permission_state.dart';
 import 'state/admin_control_state.dart';
 import 'state/live_class_state.dart';
 import 'screens/splash/app_splash_screen.dart';
-import 'screens/auth/login_screen.dart';
+import 'screens/login_screen.dart';
 import 'screens/student/student_shell.dart';
 import 'screens/professor/professor_shell.dart';
 import 'screens/manager/manager_shell.dart';

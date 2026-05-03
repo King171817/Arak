@@ -1,7 +1,8 @@
 ﻿import 'package:flutter/material.dart';
-import '../services/api_service.dart';
-import 'student_requests_screen.dart';
-import 'admin_requests_screen.dart';
+import 'package:provider/provider.dart';
+import '../state/app_state.dart';
+import '../models/auth/app_role.dart';
+import '../models/users/app_user_model.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -24,26 +25,45 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      final result = await ApiService.login(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
+      final email = emailController.text.trim();
+      final password = passwordController.text.trim();
+
+      if (email.isEmpty || password.isEmpty) {
+        setState(() {
+          error = 'ایمیل و رمز عبور الزامی است';
+        });
+        return;
+      }
+
+      // شبیه‌سازی ورود
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      // تعیین نقش بر اساس ایمیل
+      AppRole role = AppRole.student;
+      String unitKey = 'all';
+
+      if (email.contains('admin')) {
+        role = AppRole.superAdmin;
+      } else if (email.contains('prof')) {
+        role = AppRole.professor;
+      } else if (email.contains('manager')) {
+        role = AppRole.educationManager;
+      }
+
+      // ایجاد کاربر
+      final user = AppUserModel(
+        id: email,
+        username: email.split('@')[0],
+        displayName: email.split('@')[0],
+        role: role,
+        unitKey: unitKey,
+        permissions: [],
       );
 
-      final role = result['user']?['role'];
-
+      // بروزرسانی AppState
       if (!mounted) return;
-
-      if (role == 'admin') {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const AdminRequestsScreen()),
-        );
-      } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const StudentRequestsScreen()),
-        );
-      }
+      final appState = context.read<AppState>();
+      appState.login(user);
     } catch (e) {
       setState(() {
         error = e.toString();
@@ -120,45 +140,34 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       const Divider(height: 32),
+                      const Text(
+                        'تست سریع:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 12),
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
                         children: [
                           OutlinedButton(
-                            onPressed: () => fillUser('sina@zigurat.com'),
-                            child: const Text('sina'),
+                            onPressed: () => fillUser('student1@test.com'),
+                            child: const Text('دانشجو'),
                           ),
                           OutlinedButton(
-                            onPressed: () => fillUser('admin1@zigurat.com'),
-                            child: const Text('admin1'),
+                            onPressed: () => fillUser('prof1@test.com'),
+                            child: const Text('استاد'),
                           ),
                           OutlinedButton(
-                            onPressed: () => fillUser('admin2@zigurat.com'),
-                            child: const Text('admin2'),
+                            onPressed: () => fillUser('officer1@test.com'),
+                            child: const Text('کارشناس'),
                           ),
                           OutlinedButton(
-                            onPressed: () => fillUser('admin3@zigurat.com'),
-                            child: const Text('admin3'),
+                            onPressed: () => fillUser('manager1@test.com'),
+                            child: const Text('مدیر'),
                           ),
                           OutlinedButton(
-                            onPressed: () => fillUser('admin4@zigurat.com'),
-                            child: const Text('admin4'),
-                          ),
-                          OutlinedButton(
-                            onPressed: () => fillUser('admin@zigurat.com'),
-                            child: const Text('admin دانشجو'),
-                          ),
-                          OutlinedButton(
-                            onPressed: () => fillUser('prof1@zigurat.com'),
-                            child: const Text('prof1'),
-                          ),
-                          OutlinedButton(
-                            onPressed: () => fillUser('prof2@zigurat.com'),
-                            child: const Text('prof2'),
-                          ),
-                          OutlinedButton(
-                            onPressed: () => fillUser('test_student@zigurat.com'),
-                            child: const Text('test_student'),
+                            onPressed: () => fillUser('admin@test.com'),
+                            child: const Text('ادمین'),
                           ),
                         ],
                       ),
@@ -171,5 +180,12 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 }

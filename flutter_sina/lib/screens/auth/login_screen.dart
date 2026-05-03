@@ -1,88 +1,76 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../core/core.dart';
-import '../../core/theme/theme.dart';
-import '../../models/auth/app_lang.dart';
 import '../../state/app_state.dart';
-import '../../state/permissions/permission_state.dart';
-import '../../widgets/widgets.dart';
+import '../../models/auth/app_role.dart';
+import '../../models/users/app_user_model.dart';
 
 class LoginScreen extends StatefulWidget {
-  final VoidCallback? onLoggedIn;
-
-  const LoginScreen({
-    super.key,
-    this.onLoggedIn,
-  });
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController userCtrl = TextEditingController();
-  final TextEditingController passCtrl = TextEditingController();
+  final emailController = TextEditingController(text: 'student1@test.com');
+  final passwordController = TextEditingController(text: 'Test123456');
 
-  bool passwordVisible = false;
   bool loading = false;
-
-  @override
-  void dispose() {
-    userCtrl.dispose();
-    passCtrl.dispose();
-    super.dispose();
-  }
+  String? error;
 
   Future<void> login() async {
-    if (loading) return;
-
     setState(() {
       loading = true;
+      error = null;
     });
 
-    final AppState appState = context.read<AppState>();
-
     try {
-      await appState.loginWithRepository(
-        username: userCtrl.text.trim(),
-        password: passCtrl.text.trim(),
+      // نام کاربری و رمز عبور تست
+      final email = emailController.text.trim();
+      final password = passwordController.text.trim();
+
+      if (email.isEmpty || password.isEmpty) {
+        setState(() {
+          error = 'ایمیل و رمز عبور الزامی است';
+        });
+        return;
+      }
+
+      // شبیه‌سازی ورود
+      await Future.delayed(const Duration(seconds: 1));
+
+      // تعیین نقش بر اساس ایمیل
+      AppRole role = AppRole.student;
+      String unitKey = 'all';
+
+      if (email.contains('admin')) {
+        role = AppRole.superAdmin;
+      } else if (email.contains('professor')) {
+        role = AppRole.professor;
+      } else if (email.contains('manager')) {
+        role = AppRole.educationManager;
+      }
+
+      // ایجاد کاربر
+      final user = AppUserModel(
+        id: email,
+        username: email.split('@')[0],
+        displayName: email.split('@')[0],
+        role: role,
+        unitKey: unitKey,
+        permissions: [],
       );
 
+      // بروزرسانی AppState
+      final appState = context.read<AppState>();
+      appState.login(user);
+
       if (!mounted) return;
-
-      final permissionState = context.read<PermissionState>();
-
-await permissionState.loadForUser(
-  appState.currentUser?.id ?? userCtrl.text.trim(),
-);
-
-if (permissionState.isLocked) {
-  appState.logout();
-  throw Exception('account_locked');
-}
-
-widget.onLoggedIn?.call();
-    } catch (error) {
-      if (!mounted) return;
-
-      final bool locked = error.toString().contains('account_locked');
-
-      final String errorText = locked
-          ? (appState.selectedLang == AppLang.fa
-              ? '\u062d\u0633\u0627\u0628 \u0634\u0645\u0627 \u062a\u0648\u0633\u0637 \u0645\u062f\u06cc\u0631 \u0627\u0635\u0644\u06cc \u0642\u0641\u0644 \u0634\u062f\u0647 \u0627\u0633\u062a'
-              : appState.selectedLang == AppLang.ar
-                  ? '\u062a\u0645 \u0642\u0641\u0644 \u062d\u0633\u0627\u0628\u0643 \u0628\u0648\u0627\u0633\u0637\u0629 \u0627\u0644\u0645\u062f\u064a\u0631 \u0627\u0644\u0631\u0626\u064a\u0633\u064a'
-                  : 'Your account has been locked by the main admin')
-          : (appState.selectedLang == AppLang.fa
-              ? '\u0646\u0627\u0645 \u06a9\u0627\u0631\u0628\u0631\u06cc \u06cc\u0627 \u0631\u0645\u0632 \u0639\u0628\u0648\u0631 \u0646\u0627\u062f\u0631\u0633\u062a \u0627\u0633\u062a'
-              : appState.selectedLang == AppLang.ar
-                  ? '\u0627\u0633\u0645 \u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645 \u0623\u0648 \u0643\u0644\u0645\u0629 \u0627\u0644\u0645\u0631\u0648\u0631 \u063a\u064a\u0631 \u0635\u062d\u064a\u062d\u0629'
-                  : 'Username or password is incorrect');
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorText)),
-      );
+    } catch (e) {
+      setState(() {
+        error = e.toString();
+      });
     } finally {
       if (mounted) {
         setState(() {
@@ -92,206 +80,111 @@ widget.onLoggedIn?.call();
     }
   }
 
+  void fillUser(String email) {
+    setState(() {
+      emailController.text = email;
+      passwordController.text = 'Test123456';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final AppState appState = context.watch<AppState>();
-    final AppLang lang = appState.selectedLang;
-
     return Directionality(
-      textDirection: textDirectionOf(lang),
+      textDirection: TextDirection.rtl,
       child: Scaffold(
-        floatingActionButton: const FloatingSupportButton(),
-        body: Container(
-          decoration: AppDecorations.pageBackground(context),
-          child: Stack(
-            children: <Widget>[
-              Positioned(
-                top: -90,
-                right: -80,
-                child: _LoginGlow(
-                  size: 230,
-                  color: AppColors.primary.withValues(alpha: 0.16),
-                ),
-              ),
-              Positioned(
-                bottom: -120,
-                left: -80,
-                child: _LoginGlow(
-                  size: 280,
-                  color: AppColors.secondary.withValues(alpha: 0.16),
-                ),
-              ),
-              Center(
-                child: SingleChildScrollView(
+        body: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
+              child: Card(
+                elevation: 6,
+                child: Padding(
                   padding: const EdgeInsets.all(20),
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 470),
-                    child: Container(
-                      decoration: AppDecorations.cardDecoration,
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Container(
-                            width: 82,
-                            height: 82,
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: <Color>[
-                                  AppColors.primary,
-                                  AppColors.secondary,
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(28),
-                            ),
-                            child: const Icon(
-                              Icons.account_balance_outlined,
-                              color: Colors.white,
-                              size: 44,
-                            ),
+                  child: Column(
+                    children: [
+                      const Text(
+                        'ورود به سیستم',
+                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: emailController,
+                        textDirection: TextDirection.ltr,
+                        decoration: const InputDecoration(
+                          labelText: 'ایمیل',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: passwordController,
+                        obscureText: true,
+                        textDirection: TextDirection.ltr,
+                        decoration: const InputDecoration(
+                          labelText: 'رمز عبور',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      if (error != null)
+                        Text(
+                          error!,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: loading ? null : login,
+                          child: loading
+                              ? const CircularProgressIndicator()
+                              : const Text('ورود'),
+                        ),
+                      ),
+                      const Divider(height: 32),
+                      const Text(
+                        'تست سریع:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          OutlinedButton(
+                            onPressed: () => fillUser('student1@test.com'),
+                            child: const Text('دانشجو'),
                           ),
-                          const SizedBox(height: 16),
-                          Text(
-                            appText(lang, 'app_name'),
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 23,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary,
-                            ),
+                          OutlinedButton(
+                            onPressed: () => fillUser('professor1@test.com'),
+                            child: const Text('استاد'),
                           ),
-                          const SizedBox(height: 6),
-                          Text(
-                            appText(lang, 'university_app'),
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: AppColors.textSecondary,
-                            ),
+                          OutlinedButton(
+                            onPressed: () => fillUser('manager1@test.com'),
+                            child: const Text('مدیر'),
                           ),
-                          const SizedBox(height: 22),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            alignment: WrapAlignment.center,
-                            children: AppLang.values.map((AppLang item) {
-                              return ChoiceChip(
-                                label: Text(langCode(item)),
-                                selected: appState.selectedLang == item,
-                                onSelected: (_) => appState.setLanguage(item),
-                              );
-                            }).toList(),
-                          ),
-                          const SizedBox(height: 22),
-                          TextField(
-                            controller: userCtrl,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              labelText: appText(lang, 'username'),
-                              prefixIcon: const Icon(Icons.person_outline),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          TextField(
-                            controller: passCtrl,
-                            obscureText: !passwordVisible,
-                            onSubmitted: (_) => login(),
-                            decoration: InputDecoration(
-                              labelText: appText(lang, 'password'),
-                              prefixIcon: const Icon(Icons.lock_outline),
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    passwordVisible = !passwordVisible;
-                                  });
-                                },
-                                icon: Icon(
-                                  passwordVisible
-                                      ? Icons.visibility_off_outlined
-                                      : Icons.visibility_outlined,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 18),
-                          SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: ElevatedButton.icon(
-                              onPressed: loading ? null : login,
-                              icon: loading
-                                  ? const SizedBox(
-                                      width: 18,
-                                      height: 18,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                  : const Icon(Icons.login),
-                              label: Text(appText(lang, 'login')),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary.withValues(alpha: 0.06),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: const Text(
-                              'Test accounts:\n'
-                              'Student: admin / 1234\n'
-                              'Professor: prof1 / 1234\n'
-                              'Education Manager: admin2 / 1234\n'
-                              'Super Admin: sina / 1234\n'
-                              'Education Officer: edu_officer1 / 1234',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontSize: 12,
-                                height: 1.5,
-                                color: AppColors.textSecondary,
-                              ),
-                            ),
+                          OutlinedButton(
+                            onPressed: () => fillUser('admin@test.com'),
+                            child: const Text('ادمین'),
                           ),
                         ],
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
-}
-
-class _LoginGlow extends StatelessWidget {
-  final double size;
-  final Color color;
-
-  const _LoginGlow({
-    required this.size,
-    required this.color,
-  });
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: color,
-      ),
-    );
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 }
-
-
-
-
-
-
-

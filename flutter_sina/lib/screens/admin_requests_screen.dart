@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import '../services/api_service.dart';
+import '../core/http/api_service.dart';
 import 'login_screen.dart';
 
 class AdminRequestsScreen extends StatefulWidget {
