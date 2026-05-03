@@ -2,7 +2,6 @@
 import 'package:provider/provider.dart';
 
 import '../../core/core.dart';
-import '../../core/theme/theme.dart';
 import '../../data/mock/mock_units.dart';
 import '../../models/auth/app_lang.dart';
 import '../../models/units/unit_model.dart';
@@ -80,3 +79,4 @@ class UnitsScreen extends StatelessWidget {
     );
   }
 }
+

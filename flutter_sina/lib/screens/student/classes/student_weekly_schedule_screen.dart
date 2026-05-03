@@ -2,7 +2,6 @@
 import 'package:provider/provider.dart';
 
 import '../../../core/core.dart';
-import '../../../core/theme/theme.dart';
 import '../../../models/classes/education_class_model.dart';
 import '../../../models/auth/app_lang.dart';
 import '../../../state/app_state.dart';
@@ -331,3 +330,4 @@ class _ClassScheduleTile extends StatelessWidget {
     );
   }
 }
+

@@ -8,7 +8,7 @@ class AppDecorations {
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          Theme.of(context).primaryColor.withOpacity(0.05),
+          Theme.of(context).primaryColor.withValues(alpha: 0.05),
           Colors.white,
         ],
       ),
@@ -20,7 +20,7 @@ class AppDecorations {
     borderRadius: BorderRadius.circular(20),
     boxShadow: [
       BoxShadow(
-        color: Colors.black.withOpacity(0.05),
+        color: Colors.black.withValues(alpha: 0.05),
         blurRadius: 15,
         offset: Offset(0, 5),
       ),

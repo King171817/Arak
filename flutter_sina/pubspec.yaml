@@ -1,4 +1,4 @@
-name: testapp2
+﻿name: testapp2
 description: A new Flutter project
 publish_to: 'none'
 
@@ -9,6 +9,8 @@ environment:
 
 dependencies:
   flutter:
+    sdk: flutter
+  flutter_localizations:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
@@ -40,3 +42,4 @@ flutter:
     - assets/images/Mony.png
     - assets/images/Taxi.png
     - assets/images/Translator.png
+

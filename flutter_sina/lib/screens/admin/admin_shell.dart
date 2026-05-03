@@ -33,7 +33,7 @@ class _AdminShellState extends State<AdminShell> {
 
   @override
   Widget build(BuildContext context) {
-    final List<_AdminTab> tabs = <_AdminTab>[
+final List<_AdminTab> tabs = <_AdminTab>[
       const _AdminTab(
         label: 'داشبورد',
         icon: Icons.dashboard_outlined,
@@ -486,3 +486,5 @@ class _AdminTab {
     required this.page,
   });
 }
+
+

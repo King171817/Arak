@@ -247,7 +247,31 @@ String appText(AppLang lang, String key) {
       'EN': 'Enter Section',
       'AR': 'الدخول إلى القسم',
     },
-    'tickets': {
+            'appearance': {
+          'FA': 'ظاهر',
+          'EN': 'Appearance',
+          'AR': 'المظهر',
+        },
+        'control': {
+          'FA': 'کنترل',
+          'EN': 'Control',
+          'AR': 'التحكم',
+        },
+        'users_roles_logs': {
+          'FA': 'کاربران، نقش‌ها و لاگ',
+          'EN': 'Users, Roles and Logs',
+          'AR': 'المستخدمون والأدوار والسجلات',
+        },
+        'section_locks': {
+          'FA': 'قفل بخش‌ها',
+          'EN': 'Section Locks',
+          'AR': 'قفل الأقسام',
+        },
+        'global_settings': {
+          'FA': 'تنظیمات سراسری',
+          'EN': 'Global Settings',
+          'AR': 'الإعدادات العامة',
+        },        'tickets': {
       'FA': 'درخواست‌ها',
       'EN': 'Requests',
       'AR': 'الطلبات',
@@ -261,6 +285,7 @@ String appText(AppLang lang, String key) {
 String tr(AppLang lang, String key) {
   return appText(lang, key);
 }
+
 
 
 
