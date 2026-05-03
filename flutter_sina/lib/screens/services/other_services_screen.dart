@@ -52,15 +52,15 @@ class OtherServicesScreen extends StatelessWidget {
             ),
           Container(
             decoration: AppDecorations.headerDecoration,
-            padding: const EdgeInsets.all(14),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             child: Row(
               children: <Widget>[
-                const Icon(Icons.apps_outlined, color: Colors.white, size: 30),
+                const Icon(Icons.apps_outlined, color: Colors.white, size: 22),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     rtl ? 'مرکز خدمات دانشجویی و سازمانی' : 'Student and Partner Services Center',
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
                   ),
                 ),
               ],
@@ -71,7 +71,7 @@ class OtherServicesScreen extends StatelessWidget {
             rtl
                 ? 'هر خدمت در آینده می‌تواند توسط شرکت، سازمان، واحد دانشگاه یا پیمانکار مدیریت شود.'
                 : 'Each service can later be managed by a company, organization, university unit or contractor.',
-            style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+            style: const TextStyle(fontSize: 10, color: AppColors.textSecondary),
           ),
           const SizedBox(height: 10),
           GridView.builder(
@@ -80,9 +80,9 @@ class OtherServicesScreen extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: MediaQuery.of(context).size.width > 820 ? 3 : 2,
-              crossAxisSpacing: 7,
-              mainAxisSpacing: 7,
-              childAspectRatio: 3.4,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 5,
+              childAspectRatio: 4.2,
             ),
             itemBuilder: (BuildContext context, int index) {
               return _ServiceFutureCard(item: services[index]);
@@ -110,13 +110,13 @@ class _ServiceFutureCard extends StatelessWidget {
         child: Row(
           children: <Widget>[
             Container(
-              width: 31,
-              height: 31,
+              width: 26,
+              height: 26,
               decoration: BoxDecoration(
                 color: AppColors.primary.withValues(alpha: 0.10),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(item.icon, size: 19, color: AppColors.primary),
+              child: Icon(item.icon, size: 16, color: AppColors.primary),
             ),
             const SizedBox(width: 7),
             Expanded(
@@ -128,14 +128,14 @@ class _ServiceFutureCard extends StatelessWidget {
                     item.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 1),
                   Text(
                     item.providerType,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 8.5, color: AppColors.textSecondary),
+                    style: const TextStyle(fontSize: 8, color: AppColors.textSecondary),
                   ),
                 ],
               ),
@@ -166,4 +166,5 @@ class _FutureServiceItem {
     this.needsApproval,
   );
 }
+
 

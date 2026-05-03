@@ -3,9 +3,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../core/helpers/language_helper.dart';
-import '../core/theme/app_theme.dart';
 import '../models/auth/app_lang.dart';
 import '../state/app_state.dart';
+import '../core/theme/app_theme.dart';
 
 class MyApp extends StatelessWidget {
   final Widget home;
@@ -18,11 +18,11 @@ class MyApp extends StatelessWidget {
   Locale _localeOf(AppLang lang) {
     switch (lang) {
       case AppLang.fa:
-        return const Locale('fa', 'IR');
+        return const Locale('fa');
       case AppLang.en:
-        return const Locale('en', 'US');
+        return const Locale('en');
       case AppLang.ar:
-        return const Locale('ar', 'SA');
+        return const Locale('ar');
     }
   }
 
@@ -30,15 +30,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AppState>(
       builder: (context, appState, _) {
-        final lang = appState.selectedLang;
+        final AppLang lang = appState.selectedLang;
 
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           locale: _localeOf(lang),
           supportedLocales: const [
-            Locale('fa', 'IR'),
-            Locale('en', 'US'),
-            Locale('ar', 'SA'),
+            Locale('fa'),
+            Locale('en'),
+            Locale('ar'),
           ],
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
