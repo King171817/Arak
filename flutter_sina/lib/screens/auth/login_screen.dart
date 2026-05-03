@@ -57,6 +57,11 @@ await permissionState.loadForUser(
   appState.currentUser?.id ?? userCtrl.text.trim(),
 );
 
+if (permissionState.isLocked) {
+  appState.logout();
+  throw Exception('account_locked');
+}
+
 widget.onLoggedIn?.call();
     } catch (error) {
       if (!mounted) return;
@@ -281,6 +286,7 @@ class _LoginGlow extends StatelessWidget {
     );
   }
 }
+
 
 
 
