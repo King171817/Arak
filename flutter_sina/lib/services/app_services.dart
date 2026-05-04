@@ -16,11 +16,7 @@ class AppServices {
   }
 
   static AuthRepository get authRepository {
-    if (useSupabase) {
-      return SupabaseAuthRepository();
-    }
-
-    return MockAuthRepository();
+    return SupabaseAuthRepository();
   }
 
   static ClassesRepository get classesRepository {
@@ -47,3 +43,4 @@ class AppServices {
     return MockSettingsRepository();
   }
 }
+

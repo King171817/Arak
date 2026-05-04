@@ -1,76 +1,76 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/core.dart';
+import '../../core/theme/theme.dart';
+import '../../models/auth/app_lang.dart';
 import '../../state/app_state.dart';
-import '../../models/auth/app_role.dart';
-import '../../models/users/app_user_model.dart';
+import '../../widgets/widgets.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final VoidCallback? onLoggedIn;
+
+  const LoginScreen({
+    super.key,
+    this.onLoggedIn,
+  });
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final emailController = TextEditingController(text: 'student1@test.com');
-  final passwordController = TextEditingController(text: 'Test123456');
+  final TextEditingController userCtrl = TextEditingController();
+  final TextEditingController passCtrl = TextEditingController();
 
+  bool passwordVisible = false;
   bool loading = false;
-  String? error;
+
+  @override
+  void dispose() {
+    userCtrl.dispose();
+    passCtrl.dispose();
+    super.dispose();
+  }
 
   Future<void> login() async {
+    if (loading) return;
+
     setState(() {
       loading = true;
-      error = null;
     });
 
+    final AppState appState = context.read<AppState>();
+
     try {
-      // نام کاربری و رمز عبور تست
-      final email = emailController.text.trim();
-      final password = passwordController.text.trim();
-
-      if (email.isEmpty || password.isEmpty) {
-        setState(() {
-          error = 'ایمیل و رمز عبور الزامی است';
-        });
-        return;
-      }
-
-      // شبیه‌سازی ورود
-      await Future.delayed(const Duration(seconds: 1));
-
-      // تعیین نقش بر اساس ایمیل
-      AppRole role = AppRole.student;
-      String unitKey = 'all';
-
-      if (email.contains('admin')) {
-        role = AppRole.superAdmin;
-      } else if (email.contains('professor')) {
-        role = AppRole.professor;
-      } else if (email.contains('manager')) {
-        role = AppRole.educationManager;
-      }
-
-      // ایجاد کاربر
-      final user = AppUserModel(
-        id: email,
-        username: email.split('@')[0],
-        displayName: email.split('@')[0],
-        role: role,
-        unitKey: unitKey,
-        permissions: [],
+      await appState.loginWithRepository(
+        username: userCtrl.text.trim(),
+        password: passCtrl.text.trim(),
       );
 
-      // بروزرسانی AppState
-      final appState = context.read<AppState>();
-      appState.login(user);
-
       if (!mounted) return;
-    } catch (e) {
-      setState(() {
-        error = e.toString();
-      });
+
+      widget.onLoggedIn?.call();
+    } catch (error) {
+      if (!mounted) return;
+
+      final String errorText = error.toString().contains('account_locked')
+          ? (appState.selectedLang == AppLang.fa
+              ? 'حساب شما توسط مدیر اصلی قفل شده است'
+              : appState.selectedLang == AppLang.ar
+                  ? 'تم قفل حسابك بواسطة المدير الرئيسي'
+                  : 'Your account has been locked by the main admin')
+          : (appState.selectedLang == AppLang.fa
+              ? 'نام کاربری یا رمز عبور نادرست است'
+              : appState.selectedLang == AppLang.ar
+                  ? 'اسم المستخدم أو كلمة المرور غير صحيحة'
+                  : 'Username or password is incorrect');
+
+      ScaffoldMessenger.of(context)
+        ..clearSnackBars()
+        ..showSnackBar(
+          SnackBar(content: Text(errorText)),
+        );
     } finally {
       if (mounted) {
         setState(() {
@@ -80,111 +80,202 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void fillUser(String email) {
-    setState(() {
-      emailController.text = email;
-      passwordController.text = 'Test123456';
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final AppState appState = context.watch<AppState>();
+    final AppLang lang = appState.selectedLang;
+
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: textDirectionOf(lang),
       child: Scaffold(
-        body: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 420),
-              child: Card(
-                elevation: 6,
-                child: Padding(
+        floatingActionButton: const FloatingSupportButton(),
+        body: Container(
+          decoration: AppDecorations.pageBackground(context),
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                top: -90,
+                right: -80,
+                child: _LoginGlow(
+                  size: 230,
+                  color: AppColors.primary.withValues(alpha: 0.16),
+                ),
+              ),
+              Positioned(
+                bottom: -120,
+                left: -80,
+                child: _LoginGlow(
+                  size: 280,
+                  color: AppColors.secondary.withValues(alpha: 0.16),
+                ),
+              ),
+              Center(
+                child: SingleChildScrollView(
                   padding: const EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      const Text(
-                        'ورود به سیستم',
-                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 20),
-                      TextField(
-                        controller: emailController,
-                        textDirection: TextDirection.ltr,
-                        decoration: const InputDecoration(
-                          labelText: 'ایمیل',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      TextField(
-                        controller: passwordController,
-                        obscureText: true,
-                        textDirection: TextDirection.ltr,
-                        decoration: const InputDecoration(
-                          labelText: 'رمز عبور',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      if (error != null)
-                        Text(
-                          error!,
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: loading ? null : login,
-                          child: loading
-                              ? const CircularProgressIndicator()
-                              : const Text('ورود'),
-                        ),
-                      ),
-                      const Divider(height: 32),
-                      const Text(
-                        'تست سریع:',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: [
-                          OutlinedButton(
-                            onPressed: () => fillUser('student1@test.com'),
-                            child: const Text('دانشجو'),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 470),
+                    child: Container(
+                      decoration: AppDecorations.cardDecoration,
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Container(
+                            width: 82,
+                            height: 82,
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: <Color>[
+                                  AppColors.primary,
+                                  AppColors.secondary,
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(28),
+                            ),
+                            child: const Icon(
+                              Icons.account_balance_outlined,
+                              color: Colors.white,
+                              size: 44,
+                            ),
                           ),
-                          OutlinedButton(
-                            onPressed: () => fillUser('professor1@test.com'),
-                            child: const Text('استاد'),
+                          const SizedBox(height: 16),
+                          Text(
+                            appText(lang, 'app_name'),
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 23,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                            ),
                           ),
-                          OutlinedButton(
-                            onPressed: () => fillUser('manager1@test.com'),
-                            child: const Text('مدیر'),
+                          const SizedBox(height: 6),
+                          Text(
+                            appText(lang, 'university_app'),
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: AppColors.textSecondary,
+                            ),
                           ),
-                          OutlinedButton(
-                            onPressed: () => fillUser('admin@test.com'),
-                            child: const Text('ادمین'),
+                          const SizedBox(height: 22),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            alignment: WrapAlignment.center,
+                            children: AppLang.values.map((AppLang item) {
+                              return ChoiceChip(
+                                label: Text(langCode(item)),
+                                selected: appState.selectedLang == item,
+                                onSelected: (_) => appState.setLanguage(item),
+                              );
+                            }).toList(),
+                          ),
+                          const SizedBox(height: 22),
+                          TextField(
+                            controller: userCtrl,
+                            textInputAction: TextInputAction.next,
+                            decoration: InputDecoration(
+                              labelText: appText(lang, 'username'),
+                              prefixIcon: const Icon(Icons.person_outline),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          TextField(
+                            controller: passCtrl,
+                            obscureText: !passwordVisible,
+                            onSubmitted: (_) => login(),
+                            decoration: InputDecoration(
+                              labelText: appText(lang, 'password'),
+                              prefixIcon: const Icon(Icons.lock_outline),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    passwordVisible = !passwordVisible;
+                                  });
+                                },
+                                icon: Icon(
+                                  passwordVisible
+                                      ? Icons.visibility_off_outlined
+                                      : Icons.visibility_outlined,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 18),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton.icon(
+                              onPressed: loading ? null : login,
+                              icon: loading
+                                  ? const SizedBox(
+                                      width: 18,
+                                      height: 18,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : const Icon(Icons.login),
+                              label: Text(appText(lang, 'login')),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary.withValues(alpha: 0.06),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: const Text(
+                              'Test accounts:\n'
+                              'Student: admin / 1234\n'
+                              'Professor: prof1 / 1234\n'
+                              'Education Manager: admin2 / 1234\n'
+                              'Super Admin: sina / 123456\n'
+                              'Education Officer: edu_officer1 / 1234',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: 12,
+                                height: 1.5,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),
     );
   }
+}
+
+class _LoginGlow extends StatelessWidget {
+  final double size;
+  final Color color;
+
+  const _LoginGlow({
+    required this.size,
+    required this.color,
+  });
 
   @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color,
+      ),
+    );
   }
 }
+
+
+
